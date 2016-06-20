@@ -36,7 +36,7 @@ for set_name in sorted(img_fns.keys()):
     for video_name in sorted(img_fns[set_name].keys()):
         wri = cv.VideoWriter(
             'data/plots/{}_{}.avi'.format(set_name, video_name),
-            cv.VideoWriter_fourcc(*'XVID'), 30, (640, 480))
+            cv.cv.CV_FOURCC(*'XVID'), 30, (640, 480))
         for frame_i, fn in sorted(img_fns[set_name][video_name]):
             img = cv.imread(fn)
             if str(frame_i) in annotations[set_name][video_name]['frames']:
