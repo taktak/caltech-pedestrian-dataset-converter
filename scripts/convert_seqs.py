@@ -35,8 +35,9 @@ out_dir = 'data/images'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 for dname in sorted(glob.glob('data/set*')):
+    print "{} is being extracted. ".format(dname)
     for fn in sorted(glob.glob('{}/*.seq'.format(dname))):
-
+        print "  {} is being extracted. ".format(fn)
         # https://gist.github.com/psycharo/7e6422a491d93e1e3219/
         ifile = open(fn, 'rb')
         params = read_header(ifile)
@@ -49,7 +50,8 @@ for dname in sorted(glob.glob('data/set*')):
         seek[0] = 1024
         for i in range(0, params['num_frames']):
             tmp = struct.unpack_from('@I', bytes[s:s+4])[0]
-            s = seek[i] + tmp + extra
+            I = bytes[s+4:s+tmp]
+            s += tmp + extra
             if i == 0:
                 val = struct.unpack_from('@B', bytes[s:s+1])[0]
                 if val != 0:
@@ -57,9 +59,6 @@ for dname in sorted(glob.glob('data/set*')):
                 else:
                     extra += 8
                     s += 8
-            seek[i+1] = s
-            nbytes = struct.unpack_from('@i', bytes[s:s+4])[0]
-            I = bytes[s+4:s+nbytes]
             
             tmp_file = '/tmp/img%d.jpg' % i
             open(tmp_file, 'wb+').write(I)
